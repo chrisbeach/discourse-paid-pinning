@@ -9,6 +9,7 @@ en:
     paid_pinning_plugin_currency: 'Currency'
     paid_pinning_plugin_zip_code: 'Require zip code when taking payment'
     paid_pinning_plugin_billing_address: 'Require billing address when taking payment'
+    paid_pinning_plugin_grants_trust_level: 'Payment grants trust level'
   discourse_paid_pinning:
     payments:
       success: 'Your payment has been received. Thank you for supporting this site'

@@ -8,7 +8,7 @@ module DiscourseStripe
     skip_before_action :verify_authenticity_token, only: [:create]
 
     def create
-      Rails.logger.info "Checkout"
+      Rails.logger.info "Checkout for #{current_user.username}"
 
       Rails.logger.debug user_params.inspect
 
@@ -24,10 +24,10 @@ module DiscourseStripe
       rescue ::Stripe::CardError => e
         err = e.json_body[:error]
 
-        output['messages'] << "There was an error (#{err[:type]})."
-        output['messages'] << "Error code: #{err[:code]}" if err[:code]
-        output['messages'] << "Decline code: #{err[:decline_code]}" if err[:decline_code]
-        output['messages'] << "Message: #{err[:message]}" if err[:message]
+        output['messages'] << "There was an error (#{err[:type]}) for #{current_user.username}."
+        output['messages'] << "Error code: #{err[:code]} for #{current_user.username}" if err[:code]
+        output['messages'] << "Decline code: #{err[:decline_code]} for #{current_user.username}" if err[:decline_code]
+        output['messages'] << "Message: #{err[:message]} for #{current_user.username}" if err[:message]
 
         Rails.logger.error output['messages']
 
@@ -38,7 +38,16 @@ module DiscourseStripe
         Rails.logger.debug charge.inspect
 
         txn = ::Txns.add_txn(current_user, charge.amount, current_user.id, Txns.types[:card])
-        Rails.logger.info "Successful payment. Added #{txn}"
+        Rails.logger.info "Successful payment. Added #{txn} for #{current_user.username}"
+
+        grants_trust_level = SiteSetting.paid_pinning_plugin_grants_trust_level
+
+        if (current_user.group_locked_trust_level || 0) < grants_trust_level
+          Rails.logger.info "Promoting user #{current_user.username} to trust level #{grants_trust_level}"
+          current_user.update!(group_locked_trust_level: grants_trust_level)
+          current_user.reload
+          TrustLevelGranter.grant(grants_trust_level, current_user)
+        end
 
         output['messages'] << I18n.l(Time.now(), format: :long) + ': ' + I18n.t('discourse_paid_pinning.payments.success')
         output['balance'] = ::Txns.balance_of(current_user)

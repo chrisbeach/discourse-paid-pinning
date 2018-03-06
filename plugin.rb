@@ -267,10 +267,14 @@ after_initialize do
 
     class Txns::PpTxnsController < ::ApplicationController
       before_action :ensure_logged_in
-      before_action :ensure_staff
 
       def index
         user = User.where(id: params[:user_id]).first
+
+        if !current_user.admin? && current_user.id != user.id
+          raise Discourse::InvalidAccess
+        end
+
         raise Discourse::NotFound if user.blank?
 
         txns = ::Txns.txns_for(params[:user_id])
@@ -281,14 +285,24 @@ after_initialize do
       end
 
       def create
+        unless current_user.admin?
+          raise Discourse::InvalidAccess
+        end
+
         user = User.where(id: params[:txn][:user_id]).first
+
         raise Discourse::NotFound if user.blank?
         txn = ::Txns.add_txn(user, params[:txn][:amount], current_user.id, Txns.types[:manual])
         render json: create_json(txn)
       end
 
       def destroy
+        unless current_user.admin?
+          raise Discourse::InvalidAccess
+        end
+
         user = User.where(id: params[:user_id]).first
+
         raise Discourse::NotFound if user.blank?
         raise Discourse::InvalidAccess.new unless guardian.can_delete_txn?
         ::Txns.remove(user, params[:id])

@@ -26,3 +26,6 @@ plugins:
   paid_pinning_plugin_billing_address:
     default: true
     client: true
+  paid_pinning_plugin_grants_trust_level:
+    default: 3
+    client: true
