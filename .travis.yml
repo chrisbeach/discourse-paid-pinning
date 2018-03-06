@@ -1,0 +1,40 @@
+language: ruby
+
+env:
+  global:
+    - DISCOURSE_HOSTNAME=www.example.com
+
+dist: trusty
+
+cache: bundler --path $TRAVIS_BUILD_DIR/discourse/vendor
+
+addons:
+  postgresql: 9.5
+  apt:
+    packages:
+    - gifsicle
+    - jpegoptim
+    - optipng
+    - jhead
+
+rvm:
+  - 2.3.3
+
+services:
+  - redis-server
+
+before_install:
+  - git clone https://github.com/discourse/discourse.git discourse
+  - cd discourse
+
+install:
+  - touch config/stripe.yml
+  - git clone $TRAVIS_BUILD_DIR plugins/discourse-paid-pinning --depth 50 --branch $TRAVIS_BRANCH
+
+before_script:
+  - gem install bundler
+  - bundle install
+  - bundle exec rake db:create db:migrate
+
+script:
+  - "bundle exec rake plugin:spec[discourse-paid-pinning]"

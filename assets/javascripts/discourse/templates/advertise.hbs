@@ -1,0 +1,42 @@
+{{#if loading}}
+    {{loading-spinner size="small"}}
+{{else}}
+    <p>{{cooked_spiel}}</p>
+
+    <ol class="advertise-steps">
+        {{#if anon}}
+            <li>
+                <!-- FIXME this should return user to this page -->
+                {{#d-button action="showCreateAccount"
+                            class="btn btn-primary sign-up-button"}}
+                    {{i18n 'sign_up'}}
+                {{/d-button}}
+            </li>
+        {{/if}}
+        <li>
+            {{checkout-button cannotPay=cannotPay}}
+        </li>
+        <li>
+            {{d-button  id="create-pinned-topic"
+                        class="btn btn-primary"
+                        action="createTopic"
+                        icon="plus"
+                        label="discourse_paid_pinning.post.create_pinned"
+                        disabled=cannotCreateTopic}}
+            
+        </li>
+    </ol>
+{{/if}}
+
+{{#if txns}}
+    <h2 class="transactions">Transactions</h2>
+{{/if}}
+
+{{txn-list model=txns}}
+
+<p><a href="/">{{i18n 'topic.timeline.back'}}</a></p>
+
+
+<!-- SHOW TRANSACTIONS -->
+
+<!-- IF BALANCE, SHOW CREATE PINNED TOPIC BUTTON -->

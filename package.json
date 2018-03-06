@@ -1,0 +1,22 @@
+{
+  "name": "discourse-paid-pinning",
+  "version": "0.9",
+  "description": "Discourse plugin to allow payment for pinned topics",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisbeach/discourse-paid-pinning.git"
+  },
+  "author": "Chris Beach",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/chrisbeach/discourse-paid-pinning/issues"
+  },
+  "homepage": "https://github.com/chrisbeach/discourse-paid-pinning#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-qunit": "^1.2.0"
+  }
+}

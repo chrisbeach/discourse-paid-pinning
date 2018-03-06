@@ -1,0 +1,28 @@
+plugins:
+  paid_pinning_plugin_enabled:
+    default: true
+    client: true
+  paid_pinning_plugin_fee:
+    default: 1200
+    client: true
+  paid_pinning_plugin_secret_key:
+    default: 'YOUR STRIPE API SECRET'
+    client: false
+  paid_pinning_plugin_public_key:
+    default: 'YOUR STRIPE API KEY'
+    client: true
+  paid_pinning_plugin_description:
+    client: true
+    default: 'Pinned Topic'
+  paid_pinning_plugin_shop_name:
+    client: true
+    default: ''
+  paid_pinning_plugin_currency:
+    client: true
+    default: 'USD'
+  paid_pinning_plugin_zip_code:
+    default: true
+    client: true
+  paid_pinning_plugin_billing_address:
+    default: true
+    client: true

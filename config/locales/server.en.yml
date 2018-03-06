@@ -1,0 +1,14 @@
+en:
+  site_settings:
+    paid_pinning_plugin_enabled: 'Enable paid pinning plugin?'
+    paid_pinning_plugin_fee: 'Amount in pennies / cents etc (whole number)'
+    paid_pinning_plugin_secret_key: 'Secret key from Stripe API console'
+    paid_pinning_plugin_public_key: 'Publishable key from Stripe API console'
+    paid_pinning_plugin_description: 'Description of product to be purchased (appears on checkout)'
+    paid_pinning_plugin_shop_name: 'Your shop name (appears on checkout)'
+    paid_pinning_plugin_currency: 'Currency'
+    paid_pinning_plugin_zip_code: 'Require zip code when taking payment'
+    paid_pinning_plugin_billing_address: 'Require billing address when taking payment'
+  discourse_paid_pinning:
+    payments:
+      success: 'Your payment has been received. Thank you for supporting this site'

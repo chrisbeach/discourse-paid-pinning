@@ -1,0 +1,9 @@
+<a {{action "show"}} href class="btn">
+    {{fa-icon "money"}}
+    {{#if someTxns}}
+        {{i18n 'discourse_paid_pinning.txns.count' count=count}},
+        {{currency-amount amount=balance}}
+    {{else}}
+        {{i18n 'discourse_paid_pinning.txns.none'}}
+    {{/if}}
+</a>

@@ -1,0 +1,48 @@
+div.checkout-button {
+    .d-button-label {
+        margin-left: 4px;
+    }
+    .message {
+        i.fa {
+            font-size: 20pt;
+            display: inline-block;
+            color: #6B6;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        margin-top: 14px;
+        padding: 14px;
+        border: 1px solid #6B6;
+        background-color: #efe;
+    }
+}
+
+.reply-to .pin-controls {
+    margin: 0 0 0 20px;
+    display: inline-block;
+
+    label {
+        margin-bottom: 0;
+    }
+}
+
+table.txns {
+    th {
+        text-align: left;
+    }
+    td, th {
+        padding: 4px 10px;
+    }
+    td.amount {
+        text-align: right;
+    }
+}
+
+h2.transactions {
+    margin-top: 40px
+}
+
+ol.advertise-steps li {
+    margin-bottom: 10px
+}

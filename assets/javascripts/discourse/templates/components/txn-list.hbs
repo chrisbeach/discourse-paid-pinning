@@ -1,0 +1,58 @@
+{{#if model}}
+    <table class='txns'>
+        <tr>
+            <th>Created by</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        {{#each model as |txn|}}
+            <tr class='txn'>
+                <td class='posted-by'>
+                    {{#user-link user=txn.created_by}}
+                        {{avatar txn.created_by imageSize="small"}}
+                        <span class='username'>{{txn.created_by.username}}</span>
+                    {{/user-link}}
+                </td>
+
+                <td class='type'>
+                    {{txn-type txn.type}}
+                </td>
+
+                <td class='amount'>
+                    {{currency-amount amount=txn.amount}}
+                </td>
+
+                <td>
+                    <span class='post-date'>{{txn-date txn.created_at}}</span>
+                </td>
+
+                <td>
+                    <span class='post-age'>({{age-with-tooltip txn.created_at}})</span>
+                </td>
+
+                <td>
+                    <span class='notes'>{{txn.note}}</span>
+                </td>
+
+                <td>
+                    {{#if txn.can_delete}}
+                        <span class='controls'>
+                            {{d-button action="removeTxn"
+                                       actionParam=txn
+                                       icon="times"
+                                       class="btn-small btn-danger"
+                                       title="discourse_paid_pinning.txns.remove"}}
+                        </span>
+                    {{/if}}
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+{{else if showNoTxnsMessage}}
+    No transactions yet
+{{/if}}
