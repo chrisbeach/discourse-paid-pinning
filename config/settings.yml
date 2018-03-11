@@ -1,9 +1,9 @@
 plugins:
   paid_pinning_plugin_enabled:
-    default: true
+    default: false
     client: true
   paid_pinning_plugin_fee:
-    default: 1200
+    default: 1000
     client: true
   paid_pinning_plugin_secret_key:
     default: 'YOUR STRIPE API SECRET'
