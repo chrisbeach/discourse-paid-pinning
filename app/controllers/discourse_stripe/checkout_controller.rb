@@ -49,7 +49,7 @@ module DiscourseStripe
           TrustLevelGranter.grant(grants_trust_level, current_user)
         end
 
-        output['messages'] << I18n.l(Time.now(), format: :long) + ': ' + I18n.t('discourse_paid_pinning.payments.success')
+        output['messages'] << I18n.t('discourse_paid_pinning.payments.success')
         output['balance'] = ::Txns.balance_of(current_user)
         output['txn'] = txn
       end

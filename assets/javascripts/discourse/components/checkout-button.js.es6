@@ -10,6 +10,7 @@ export default Ember.Component.extend({
     amount: null,
     anon: null,
     action: "showCreateAccount",
+    tagName: '',
 
     init() {
         this._super();
@@ -43,7 +44,6 @@ export default Ember.Component.extend({
                     }).catch((e) => {
                         self.set('transactionInProgress', false);
                         alert(e);
-
                     });
                 },
                 closed: function() {
@@ -62,7 +62,7 @@ export default Ember.Component.extend({
 
     @computed('currentUser.pp_txn_balance')
     classes(balance) {
-        return "btn btn-payment " + (balance > 0 ? 'btn-default' : 'btn-primary');
+        return "btn btn-payment " + (balance && balance > 0 ? 'btn-default' : 'btn-primary');
     },
 
     actions: {

@@ -1,21 +1,22 @@
-div.checkout-button {
+button.btn-payment {
     .d-button-label {
         margin-left: 4px;
     }
-    .message {
-        i.fa {
-            font-size: 20pt;
-            display: inline-block;
-            color: #6B6;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
+}
 
-        margin-top: 14px;
-        padding: 14px;
-        border: 1px solid #6B6;
-        background-color: #efe;
+.payment-message {
+    i.fa {
+        font-size: 20pt;
+        display: inline-block;
+        color: #6B6;
+        margin-right: 10px;
+        vertical-align: middle;
     }
+
+    margin-top: 14px;
+    padding: 14px;
+    border: 1px solid #6B6;
+    background-color: #efe;
 }
 
 .reply-to .pin-controls {
@@ -43,6 +44,30 @@ h2.transactions {
     margin-top: 40px
 }
 
-ol.advertise-steps li {
-    margin-bottom: 10px
+
+
+ol.advertise-steps {
+
+    list-style: none;
+    counter-reset: listNumbering;
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+    li {
+        &:before {
+            content: counter(listNumbering);
+            background-color: $primary-medium;
+            color: $secondary;
+            font-size: 1.2em;
+            padding: 2px 7px;
+            border-radius: 50%;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        counter-increment: listNumbering;
+        font-size: 1em;
+        font-size: 100%;
+        margin-bottom: 15px
+    }
 }
