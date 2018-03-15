@@ -63,7 +63,7 @@ after_initialize do
 
   DiscourseEvent.on(:post_created) do |post, opts, _user|
     if post.is_first_post?
-      if opts[:is_pinned].is_a?(String) ? ::JSON.parse(opts[:is_pinned]) : opts[:is_pinned]
+      if opts.has_key?(:is_pinned) && (opts[:is_pinned].is_a?(String) ? ::JSON.parse(opts[:is_pinned]) : opts[:is_pinned])
         txn_balance = Txns.balance_of(_user)
 
         if txn_balance >= SiteSetting.paid_pinning_plugin_fee
@@ -162,6 +162,13 @@ after_initialize do
       txns << record
       ::PluginStore.set(PLUGIN_STORE_TXNS_KEY, key_for(user.id), txns)
       update_aggregate_fields(user, txns)
+
+      txn_to_publish = record.clone
+      txn_to_publish[:created_by] = user
+      MessageBus.publish("/user/#{user.id}/new_pp_txn",
+                         txn: ::PpTxnSerializer.new(txn_to_publish).as_json,
+                         user_ids: [user.id])
+
       record
     end
 
@@ -344,6 +351,14 @@ after_initialize do
 
 
   add_to_serializer(:basic_user, :pp_txn_balance) do
+    if object.is_a?(Array) || object.is_a?(Hash)
+      nil
+    else
+      object.custom_fields && object.custom_fields[TXN_BALANCE_FIELD].to_i
+    end
+  end
+
+  add_to_serializer(:current_user, :pp_txn_balance) do
     if object.is_a?(Array) || object.is_a?(Hash)
       nil
     else

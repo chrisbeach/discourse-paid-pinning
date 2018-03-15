@@ -6,6 +6,7 @@ en:
     paid_pinning_plugin_public_key: 'Publishable key from Stripe API console'
     paid_pinning_plugin_description: 'Description of product to be purchased (appears on checkout)'
     paid_pinning_plugin_shop_name: 'Your shop name (appears on checkout)'
+    paid_pinning_plugin_shop_image: 'Your shop image URL (appears on checkout). Site icon used if left blank'
     paid_pinning_plugin_currency: 'Currency (AUD, CAD, EUR, GBP, JPY, RUB or USD)'
     paid_pinning_plugin_zip_code: 'Require zip code when taking payment'
     paid_pinning_plugin_billing_address: 'Require billing address when taking payment'

@@ -16,7 +16,9 @@ export default Ember.Controller.extend({
     action: "createTopic",
 
     init() {
+        console.log("Initialising advertise controller");
         this._super();
+
         let self = this;
         // Return here after creating an account
         $.cookie('destination_url', window.location.href);
@@ -37,9 +39,26 @@ export default Ember.Controller.extend({
         const store = getOwner(this).lookup('store:main');
         if (Discourse.User.current()) {
             store.find('pp_txn', { user_id: Discourse.User.current().id }).then(model => {
+                console.log("Loaded from store:");
+                console.log(model);
                 self.set('txns', model);
             });
+            const messageBus = getRegister(this).lookup('message-bus:main');
+            if (messageBus) {
+                messageBus.subscribe("/user/" +  Discourse.User.current().id + "/new_pp_txn", message => {
+                    console.log("Got message bus update: ");
+                    console.log(message);
+                    if (message.txn && message.txn.pp_txn) {
+                        // A horrible hack until we can get properly serialised json from server-side
+                        message.txn.pp_txn.created_by = Discourse.User.current();
+                        self.get("txns").pushObject(message.txn.pp_txn);
+                        const oldBalance = Discourse.User.current().get("pp_txn_balance") || 0;
+                        Discourse.User.current().set("pp_txn_balance", oldBalance + message.txn.pp_txn.amount);
+                    }
+                });
+            }
         }
+
     },
 
     @computed('anon', 'currentUser.pp_txn_balance')

@@ -17,6 +17,9 @@ plugins:
   paid_pinning_plugin_shop_name:
     client: true
     default: ''
+  paid_pinning_plugin_shop_image:
+    client: true
+    default: ''
   paid_pinning_plugin_currency:
     client: true
     default: 'USD'

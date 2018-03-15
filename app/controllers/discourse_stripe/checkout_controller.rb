@@ -14,7 +14,7 @@ module DiscourseStripe
 
       user_params[:stripeEmail]
 
-      output = { 'messages' => [], balance: ::Txns.balance_of(current_user) }
+      output = {'messages' => []}
       payment = DiscourseStripe::Stripe.new(secret_key, stripe_options)
 
       begin
@@ -50,8 +50,6 @@ module DiscourseStripe
         end
 
         output['messages'] << I18n.t('discourse_paid_pinning.payments.success')
-        output['balance'] = ::Txns.balance_of(current_user)
-        output['txn'] = txn
       end
 
       render :json => output
