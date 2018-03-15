@@ -351,6 +351,14 @@ after_initialize do
     end
   end
 
+  add_to_serializer(:current_user, :pp_txn_balance) do
+    if object.is_a?(Array) || object.is_a?(Hash)
+      nil
+    else
+      object.custom_fields && object.custom_fields[TXN_BALANCE_FIELD].to_i
+    end
+  end
+
   add_to_serializer(:post, :pp_txn_balance, false) {
     object.user.custom_fields[TXN_BALANCE_FIELD].to_i
   }
