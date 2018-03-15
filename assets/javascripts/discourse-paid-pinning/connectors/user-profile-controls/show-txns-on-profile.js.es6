@@ -23,7 +23,7 @@ export default {
         showTxns() {
             const store = getOwner(this).lookup('store:main');
             const user = this.get('args.model');
-            showTxns(store, user.get('id'), count => this.set('txnCount', count));
+            showTxns(store, user.get('id'));
         }
     }
 };

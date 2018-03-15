@@ -16,14 +16,7 @@ export default Ember.Controller.extend({
     addDisabled(newTxn, saving) {
         return saving || !newTxn || (newTxn.length === 0);
     },
-
-    _refreshCount() {
-        const callback = this.get('callback');
-        if (callback) {
-            callback(this.get('model.length'));
-        }
-    },
-
+    
     actions: {
         addTxn() {
             const txn = this.store.createRecord('pp_txn');
@@ -34,7 +27,6 @@ export default Ember.Controller.extend({
             txn.save({ amount: this.get('amount'), user_id: userId }).then(() => {
                 this.set('newTxn', '');
                 this.get('model').pushObject(txn);
-                this._refreshCount();
             }).catch(popupAjaxError).finally(() => this.set('saving', false));
         },
 
@@ -46,7 +38,6 @@ export default Ember.Controller.extend({
                     txn.destroyRecord().then(() => {
                         const txns = this.get('model');
                         txn.removeObject(txn);
-                        this._refreshCount();
                     }).catch(popupAjaxError);
                 }
             });

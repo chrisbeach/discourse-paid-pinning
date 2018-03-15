@@ -12,22 +12,6 @@ export default {
         function enableStaffFeatures(api) {
             const store = container.lookup('store:main');
 
-            // FIXME what is this doing?
-            function widgetShowTxns() {
-                showTxns(store, this.attrs.user_id, count => {
-                    this.sendWidgetAction('refreshTxns', count);
-                });
-            }
-
-            // FIXME what is this doing?
-            api.attachWidgetAction('post', 'refreshTxns', function(count) {
-                const cfs = this.model.get('user_custom_fields') || {};
-                // FIXME recalc balance too!
-                cfs.pp_txn_count = count;
-                cfs.pp_txn_balance = count;
-                this.model.set('user_custom_fields', cfs);
-            });
-
             const UserController = container.lookupFactory('controller:user');
             UserController.reopen({
                 txnCount: null,
@@ -57,7 +41,9 @@ export default {
             // Shown (by the above code) next to users that have txns
             api.createWidget('txns-icon', {
                 tagName: 'span.txns-icon',
-                click: widgetShowTxns,
+                click: function() {
+                    showTxns(store, this.attrs.user_id);
+                },
 
                 html() {
                     if (siteSettings.enable_emoji) {
