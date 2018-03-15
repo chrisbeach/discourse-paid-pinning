@@ -1,1 +1,3 @@
-{{add-pin-control model=model}}
+{{#if siteSettings.paid_pinning_plugin_enabled}}
+    {{add-pin-control model=model}}
+{{/if}}
