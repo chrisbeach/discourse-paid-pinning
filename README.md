@@ -29,6 +29,8 @@ rails c
 
 #### Remove all transactions for a user:
 
+Example:
+
 ```ruby
 Txns.remove_all_txns([user_id])
 ```
@@ -36,8 +38,12 @@ Txns.remove_all_txns([user_id])
 
 #### Add a transaction to user:
 
+`add_txn(user, amount, created_by, type, topic_id = nil, note = "")`
+
+Example:
+
 ```ruby
-Txns.add_txn(User.where(id: [user_id]).first, 1000, 1, 3, nil, "")
+Txns.add_txn(User.where(id: 2).first, 10000, 1, 3, nil, "a free gift")
 ```
 
 

@@ -50,24 +50,30 @@ ol.advertise-steps {
 
     list-style: none;
     counter-reset: listNumbering;
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-left: 20px;
 
     li {
         &:before {
             content: counter(listNumbering);
-            background-color: $primary-medium;
-            color: $secondary;
+            background-color: $secondary;
+            color: $primary-medium;
             font-size: 1.2em;
+            font-weight: bold;
             padding: 2px 7px;
             border-radius: 50%;
+            border: 1px solid $primary-medium;
             margin-right: 10px;
             vertical-align: middle;
         }
 
+        .spinner {
+            vertical-align: middle;
+            margin-right: 10px
+        }
+
         counter-increment: listNumbering;
-        font-size: 1em;
-        font-size: 100%;
         margin-bottom: 15px
     }
 }
