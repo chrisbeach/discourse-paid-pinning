@@ -7,11 +7,10 @@ export default {
     initialize(container) {
         const siteSettings = container.lookup('site-settings:main');
         const currentUser = container.lookup('current-user:main');
-        if (!siteSettings.paid_pinning_plugin_enabled || !currentUser || !currentUser.staff) { return; }
+        if (!siteSettings.paid_pinning_plugin_enabled || !currentUser) { return; }
 
-        const store = container.lookup('store:main');
-        withPluginApi('0.8.7', api => {
-
+        function enableStaffFeatures(api) {
+            const store = container.lookup('store:main');
 
             // FIXME what is this doing?
             function widgetShowTxns() {
@@ -68,6 +67,10 @@ export default {
                     }
                 }
             });
+        }
+
+
+        withPluginApi('0.8.7', api => {
 
             api.modifyClass('model:composer', {
                 createPost(opts) {
@@ -82,6 +85,10 @@ export default {
                     return result;
                 }
             });
+
+            if (currentUser.staff) {
+                enableStaffFeatures(api)
+            }
         });
     },
 };
