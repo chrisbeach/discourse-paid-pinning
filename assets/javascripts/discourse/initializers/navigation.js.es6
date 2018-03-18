@@ -5,6 +5,10 @@ export default {
     hamburger_footer: [],
 
     initialize(container) {
+
+        const siteSettings = container.lookup('site-settings:main');
+        if (!siteSettings.paid_pinning_plugin_enabled) { return; }
+        
         let self = this;
         withPluginApi('0.4', api => {
             api.decorateWidget("hamburger-menu:footerLinks", () => {
