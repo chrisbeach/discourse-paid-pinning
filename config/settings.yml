@@ -5,6 +5,9 @@ plugins:
   paid_pinning_plugin_fee:
     default: 1000
     client: true
+  paid_pinning_plugin_duration_hours:
+      default: 48
+      client: true
   paid_pinning_plugin_secret_key:
     default: 'YOUR STRIPE API SECRET'
     client: false

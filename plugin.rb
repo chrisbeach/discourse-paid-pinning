@@ -70,10 +70,10 @@ after_initialize do
           topic = Topic.find(post.topic_id)
 
           if topic.pinned_at?
-            Rails.logger.debug ">>>>> Topic already pinned"
-          else
-            pin_until = 4.days.from_now.to_s
-            Rails.logger.debug ">>>>> Pinning topic until #{pin_until}"
+            Rails.logger.debug "Topic already pinned"
+          elsif SiteSetting.paid_pinning_plugin_duration_hours > 0
+            pin_until = SiteSetting.paid_pinning_plugin_duration_hours.hours.from_now.to_s
+            Rails.logger.debug "Pinning topic until #{pin_until}"
             topic.update_pinned(status = true, global = true, pinned_until = pin_until)
             Txns.add_txn(_user,
                          -SiteSetting.paid_pinning_plugin_fee,
