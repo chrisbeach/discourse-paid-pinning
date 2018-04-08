@@ -23,7 +23,7 @@ export default Ember.Component.extend({
         if (typeof StripeCheckout !== 'undefined') {
             this.set('stripeHandler', StripeCheckout.configure({
                 key: self.get('settings').paid_pinning_plugin_public_key,
-                image: self.get('settings').logo_small_url,
+                image: self.get('settings').paid_pinning_plugin_shop_image || self.get('settings').logo_small_url,
                 locale: 'auto',
                 billingAddress: self.get('settings').paid_pinning_plugin_billing_address,
                 zipCode: self.get('settings').paid_pinning_plugin_zip_code,
