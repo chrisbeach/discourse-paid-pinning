@@ -9,7 +9,6 @@ export default Ember.Component.extend({
     result: [],
     amount: null,
     anon: null,
-    action: "showCreateAccount",
     tagName: '',
 
     init() {
@@ -80,10 +79,6 @@ export default Ember.Component.extend({
                 amount: self.get('amount'),
                 allowRememberMe: true
             });
-        },
-
-        showCreateAccount() {
-            this.sendAction();
         }
     }
 });
