@@ -14,4 +14,4 @@ en:
     paid_pinning_plugin_grants_trust_level: 'Payment grants trust level'
   discourse_paid_pinning:
     payments:
-      success: 'Your payment has been received. Thank you for supporting this site'
+      success: 'Payment received'

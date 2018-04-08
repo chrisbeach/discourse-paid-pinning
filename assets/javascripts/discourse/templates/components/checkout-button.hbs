@@ -2,26 +2,28 @@
     <p class="warning">Missing setting: paid_pinning_plugin_fee</p>
 {{/unless}}
 
-{{#if transactionInProgress}}
-    {{loading-spinner size="small"}}
-    Processing Payment
-{{else}}
-    {{#d-button action="submitStripeCheckout"
-                class=classes
-                icon="credit-card"
-                disabled=disabledPayButton}}
-        <span class="d-button-label">
-            Pay {{currency-amount amount=settings.paid_pinning_plugin_fee}} Fee
-        </span>
-    {{/d-button}}
-{{/if}}
+{{#d-button action="submitStripeCheckout"
+            class=classes
+            icon="credit-card"
+            disabled=disabledPayButton}}
+    <span class="d-button-label">
+        Pay {{currency-amount amount=settings.paid_pinning_plugin_fee}} Fee
+    </span>
+{{/d-button}}
 
 {{#each result as |message|}}
-    <div class="payment-message">
-        <i class="fa fa-info"></i>
+    <span class="payment-message">
+        <i class="fa fa-check"></i>
         {{{message}}}
-    </div>
+    </span>
 {{/each}}
+
+{{#if transactionInProgress}}
+    <span class="payment-message">
+        {{loading-spinner size="small"}}
+        Processing Payment
+    </span>
+{{/if}}
 
 {{#if failure}}
     <p class="warning">Sorry, but payment cannot be taken at present: {{{failure}}}</p>

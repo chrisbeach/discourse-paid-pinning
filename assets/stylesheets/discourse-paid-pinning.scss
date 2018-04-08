@@ -6,17 +6,15 @@ button.btn-payment {
 
 .payment-message {
     i.fa {
-        font-size: 20pt;
         display: inline-block;
         color: #6B6;
-        margin-right: 10px;
+        margin-right: 2px;
         vertical-align: middle;
     }
 
-    margin-top: 14px;
-    padding: 14px;
-    border: 1px solid #6B6;
-    background-color: #efe;
+    color: #6B6;
+    padding: 7px 12px;
+    margin-left: 10px;
 }
 
 .reply-to .pin-controls {
@@ -37,6 +35,9 @@ table.txns {
     }
     td.amount {
         text-align: right;
+    }
+    td .post-date {
+        font-size: 0.8em;
     }
 }
 

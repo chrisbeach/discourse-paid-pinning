@@ -58,19 +58,22 @@ export default {
 
         withPluginApi('0.8.7', api => {
 
-            api.modifyClass('model:composer', {
-                createPost(opts) {
-                    const result = this._super(opts);
-                    if (result) {
-                        result.then(r => {
-                            if (r.payload && typeof(r.payload.pp_txn_balance) !== 'undefined') {
-                                Discourse.User.current().set("pp_txn_balance", r.payload.pp_txn_balance);
-                            }
-                        });
+            const messageBus = container.lookup('message-bus:main');
+            if (messageBus) {
+                const channel = "/user/" +  currentUser.id + "/pp_fields";
+                messageBus.subscribe(channel, message => {
+                    console.log("Got paid_pinning user fields update: ");
+                    console.log(message);
+                    if (message.fields && message.fields.pp_user_fields) {
+                        currentUser.set("pp_txn_balance", message.fields.pp_user_fields.txn_balance);
+                        currentUser.set("pp_txn_count", message.fields.pp_user_fields.txn_count);
                     }
-                    return result;
-                }
-            });
+                });
+                console.log("Subscribed to pp_fields updates on " + channel);
+            } else {
+                console.warn("No message bus found")
+            }
+            
 
             if (currentUser.staff) {
                 enableStaffFeatures(api)

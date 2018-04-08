@@ -14,15 +14,18 @@ export default Ember.Component.extend({
 
     init() {
         this._super();
-        this.set('anon', !Discourse.User.current());
+        const currentUser = Discourse.User.current();
+        this.set('anon', !currentUser);
         this.set('settings', getRegister(this).lookup('site-settings:main'));
         this.amount = this.get('settings').paid_pinning_plugin_fee;
 
         let self = this;
 
-        if (typeof StripeCheckout !== 'undefined' && Discourse.User.current()) {
+        if (typeof StripeCheckout === 'undefined') {
+            self.set('failure', "Stripe payment library failed to load (are you online?)");
+        } else if (currentUser) {
             // Need to do this in order to get the email. Not ideal for performance:
-            Discourse.User.findByUsername(Discourse.User.current().username).then((user) => {
+            Discourse.User.findByUsername(currentUser.username).then((user) => {
                 this.set('stripeHandler', StripeCheckout.configure({
                     key: self.get('settings').paid_pinning_plugin_public_key,
                     image: self.get('settings').paid_pinning_plugin_shop_image || self.get('settings').logo_small_url,
@@ -30,30 +33,29 @@ export default Ember.Component.extend({
                     email: user.email,
                     billingAddress: self.get('settings').paid_pinning_plugin_billing_address,
                     zipCode: self.get('settings').paid_pinning_plugin_zip_code,
-                    token: function(token) {
-                        self.set('transactionInProgress', true);
-                        console.log("Stripe callback");
-                        console.log(token);
-                        let params = {
-                            stripeToken: token.id,
-                            email: token.email,
-                            amount: self.get('amount'),
-                        };
-                        ajax('/checkout.json', { data: params, method: 'post' }).then(data => {
-                            self.set('result', self.get('result').concat(data.messages));
-                            self.set('transactionInProgress', false);
-                        }).catch((e) => {
-                            self.set('transactionInProgress', false);
-                            alert(e);
-                        });
+                    token: function (token) {
+                      self.set('transactionInProgress', true);
+                      console.log("Stripe callback");
+                      console.log(token);
+                      let params = {
+                        stripeToken: token.id,
+                        email: token.email,
+                        amount: self.get('amount'),
+                      };
+                      ajax('/checkout.json', {data: params, method: 'post'}).then(data => {
+                        console.log("Server reports successful payment.");
+                        self.set('result', data.messages);
+                        self.set('transactionInProgress', false);
+                      }).catch((e) => {
+                        self.set('transactionInProgress', false);
+                        alert(e);
+                      });
                     },
-                    closed: function() {
-                        self.set('checkoutOpen', false);
+                    closed: function () {
+                      self.set('checkoutOpen', false);
                     }
                 }));
             });
-        } else {
-            self.set('failure', "Stripe library not loaded");
         }
     },
 
@@ -71,7 +73,7 @@ export default Ember.Component.extend({
         submitStripeCheckout() {
             let self = this;
             self.set('checkoutOpen', true);
-            this.get('stripeHandler').open({
+            self.get('stripeHandler').open({
                 name: self.get('settings').paid_pinning_plugin_shop_name,
                 description: self.get('settings').paid_pinning_plugin_description,
                 currency: self.get('settings').paid_pinning_plugin_currency,

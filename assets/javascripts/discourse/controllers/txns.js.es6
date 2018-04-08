@@ -16,7 +16,7 @@ export default Ember.Controller.extend({
     addDisabled(newTxn, saving) {
         return saving || !newTxn || (newTxn.length === 0);
     },
-    
+
     actions: {
         addTxn() {
             const txn = this.store.createRecord('pp_txn');
