@@ -2,6 +2,7 @@ en:
   site_settings:
     paid_pinning_plugin_enabled: 'Enable paid pinning plugin?'
     paid_pinning_plugin_fee: 'Amount in pennies / cents etc (whole number)'
+    paid_pinning_plugin_duration_hours: 'Duration of topic pinning (hours)'
     paid_pinning_plugin_secret_key: 'Secret key from Stripe API console'
     paid_pinning_plugin_public_key: 'Publishable key from Stripe API console'
     paid_pinning_plugin_description: 'Description of product to be purchased (appears on checkout)'
