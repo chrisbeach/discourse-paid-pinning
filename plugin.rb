@@ -63,6 +63,7 @@ after_initialize do
 
   DiscourseEvent.on(:post_created) do |post, opts, _user|
     if post.is_first_post?
+      Rails.logger.debug "discourse-paid-pinning: Post created. Opts: #{opts.inspect}"
       if opts[:is_pinned].is_a?(String) ? ::JSON.parse(opts[:is_pinned]) : opts[:is_pinned]
         txn_balance = Txns.balance_of(_user)
 
@@ -70,10 +71,10 @@ after_initialize do
           topic = Topic.find(post.topic_id)
 
           if topic.pinned_at?
-            Rails.logger.debug "Topic already pinned"
+            Rails.logger.debug "discourse-paid-pinning: Topic already pinned"
           elsif SiteSetting.paid_pinning_plugin_duration_hours > 0
             pin_until = SiteSetting.paid_pinning_plugin_duration_hours.hours.from_now.to_s
-            Rails.logger.debug "Pinning topic until #{pin_until}"
+            Rails.logger.debug "discourse-paid-pinning: Pinning topic until #{pin_until}"
             topic.update_pinned(status = true, global = true, pinned_until = pin_until)
             Txns.add_txn(_user,
                          -SiteSetting.paid_pinning_plugin_fee,
@@ -82,7 +83,7 @@ after_initialize do
                          topic_id = post.topic_id)
           end
         else
-          Rails.logger.error "Balance #{txn_balance} insufficient for fee #{SiteSetting.paid_pinning_plugin_fee}"
+          Rails.logger.error "discourse-paid-pinning: Balance #{txn_balance} insufficient for fee #{SiteSetting.paid_pinning_plugin_fee}"
         end
       end
     end
@@ -118,32 +119,32 @@ after_initialize do
     def self.add_txn(user, amount, created_by, type, topic_id = nil, note = "")
 
       if user.blank?
-        Rails.logger.error "Expected user"
+        Rails.logger.error "discourse-paid-pinning: Expected user"
         raise Discourse::InvalidParameters
       end
 
       if amount.blank?
-        Rails.logger.error "Expected amount"
+        Rails.logger.error "discourse-paid-pinning: Expected amount"
         raise Discourse::InvalidParameters
       end
 
       if created_by.blank?
-        Rails.logger.error "Expected created_by"
+        Rails.logger.error "discourse-paid-pinning: Expected created_by"
         raise Discourse::InvalidParameters
       end
 
       if type.blank?
-        Rails.logger.error "Expected type"
+        Rails.logger.error "discourse-paid-pinning: Expected type"
         raise Discourse::InvalidParameters
       end
 
       unless amount.is_a? Integer
-        Rails.logger.error "Expected integer amount but got #{amount}"
+        Rails.logger.error "discourse-paid-pinning: Expected integer amount but got #{amount}"
         raise Discourse::InvalidParameters
       end
 
       unless created_by.is_a? Integer
-        Rails.logger.error "Expected integer created_by but got #{created_by}"
+        Rails.logger.error "discourse-paid-pinning: Expected integer created_by but got #{created_by}"
         raise Discourse::InvalidParameters
       end
 
@@ -158,10 +159,17 @@ after_initialize do
           topic_id: topic_id,
           note: note
       }
-      Rails.logger.debug "Adding transaction #{record}"
+      Rails.logger.debug "discourse-paid-pinning: Adding transaction #{record}"
       txns << record
       ::PluginStore.set(PLUGIN_STORE_TXNS_KEY, key_for(user.id), txns)
       update_aggregate_fields(user, txns)
+
+      txn_to_publish = record.clone
+      txn_to_publish[:created_by] = user
+      MessageBus.publish("/user/#{user.id}/new_pp_txn",
+                         txn: ::PpTxnSerializer.new(txn_to_publish).as_json,
+                         user_ids: [user.id])
+
       record
     end
 
@@ -180,6 +188,9 @@ after_initialize do
     def self.remove_all(user_id)
       user = User.where(id: user_id).first
       ::PluginStore.remove(PLUGIN_STORE_TXNS_KEY, key_for(user_id))
+
+      MessageBus.publish("/user/#{user.id}/del_all_pp_txns", {}, user_ids: [user.id])
+
       update_aggregate_fields(user, [])
     end
 
@@ -187,6 +198,12 @@ after_initialize do
       user.custom_fields[TXN_COUNT_FIELD] = txns.size
       user.custom_fields[TXN_BALANCE_FIELD] = txns.inject(0){|sum,x| sum + x[:amount]}
       user.save_custom_fields
+      fields = {}
+      fields[:txn_count] = user.custom_fields[TXN_COUNT_FIELD]
+      fields[:txn_balance] = user.custom_fields[TXN_BALANCE_FIELD]
+      MessageBus.publish("/user/#{user.id}/pp_fields",
+                         fields: ::PpUserFieldsSerializer.new(fields).as_json,
+                         user_ids: [user.id])
     end
 
     def self.balance_of(user)
@@ -203,13 +220,18 @@ after_initialize do
     end
 
 
-    class ::BalanceSerializer < ApplicationSerializer
+    class ::PpUserFieldsSerializer < ApplicationSerializer
       attributes(
-          :balance
+          :txn_count,
+          :txn_balance
       )
 
-      def balance
-        object[:balance]
+      def txn_balance
+        object[:txn_balance]
+      end
+
+      def txn_count
+        object[:txn_count]
       end
     end
 

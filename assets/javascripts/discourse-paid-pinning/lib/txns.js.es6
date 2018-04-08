@@ -1,8 +1,8 @@
 import showModal from 'discourse/lib/show-modal';
 import loadScript from 'discourse/lib/load-script';
 
-export function showTxns(store, userId, callback) {
-    return loadScript('defer/html-sanitizer-bundle').then(() => {
+export function showTxns(store, userId) {
+    loadScript('defer/html-sanitizer-bundle').then(() => {
         return store.find('pp_txn', { user_id: userId }).then(model => {
             const controller = showModal('txns', {
                 model,
@@ -11,7 +11,7 @@ export function showTxns(store, userId, callback) {
             });
             controller.reset();
             controller.set('userId', userId);
-            controller.set('callback', callback);
+            console.log("Showing txns for " + userId);
             return controller;
         });
     });

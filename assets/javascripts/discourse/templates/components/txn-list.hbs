@@ -7,7 +7,6 @@
             <th>Date</th>
             <th></th>
             <th></th>
-            <th></th>
         </tr>
 
         {{#each model as |txn|}}
@@ -28,11 +27,7 @@
                 </td>
 
                 <td>
-                    <span class='post-date'>{{txn-date txn.created_at}}</span>
-                </td>
-
-                <td>
-                    <span class='post-age'>({{age-with-tooltip txn.created_at}})</span>
+                    <span class='post-date'>{{txn-date txn.created_at}} ({{age-with-tooltip txn.created_at}})</span>
                 </td>
 
                 <td>

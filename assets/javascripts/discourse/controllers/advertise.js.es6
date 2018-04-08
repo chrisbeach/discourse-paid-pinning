@@ -16,11 +16,13 @@ export default Ember.Controller.extend({
     action: "createTopic",
 
     init() {
+        console.log("Initialising advertise controller");
         this._super();
         let self = this;
+        const currentUser = Discourse.User.current();
         // Return here after creating an account
         $.cookie('destination_url', window.location.href);
-        this.set('anon', !Discourse.User.current());
+        this.set('anon', !currentUser);
         this.set('settings', getRegister(this).lookup('site-settings:main'));
         this.set('cooked_spiel', '');
         cookAsync(I18n.t('discourse_paid_pinning.advertise_spiel')).then(
@@ -35,11 +37,30 @@ export default Ember.Controller.extend({
             }
         );
         const store = getOwner(this).lookup('store:main');
-        if (Discourse.User.current()) {
-            store.find('pp_txn', { user_id: Discourse.User.current().id }).then(model => {
+        if (currentUser) {
+            store.find('pp_txn', { user_id: currentUser.id }).then(model => {
                 self.set('txns', model);
             });
+            const messageBus = getRegister(this).lookup('message-bus:main');
+            if (messageBus) {
+                messageBus.subscribe("/user/" +  currentUser.id + "/new_pp_txn", message => {
+                    console.log("Got new txn update: ");
+                    console.log(message);
+                    // Creating a new topic causes the client-side message bus to receive duplicate messages, so check we haven't received this txn before
+                    if (message.txn && message.txn.pp_txn && !self.get("txns").find(t => t.id === message.txn.pp_txn.id)) {
+                        // A horrible hack until we can get properly serialised json from server-side
+                        message.txn.pp_txn.created_by = currentUser;
+                        self.get("txns").pushObject(message.txn.pp_txn);
+                    }
+                });
+                messageBus.subscribe("/user/" +  currentUser.id + "/del_all_pp_txns", message => {
+                    console.log("Update from server: delete all pp txns");
+                    console.log(message);
+                    self.set("txns", []);
+                });
+            }
         }
+
     },
 
     @computed('anon', 'currentUser.pp_txn_balance')
