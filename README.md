@@ -2,7 +2,25 @@
 
 [![Build Status](https://travis-ci.org/chrisbeach/discourse-paid-pinning.svg?branch=master)](https://travis-ci.org/chrisbeach/discourse-paid-pinning)
 
-Allow forum members to pay to pin a topic
+* "Advertise" page (accessible via top menu and hamburger menu) 
+allows users to make payment using Stripe Checkout
+* After making a payment, users are able to create a pinned topic
+
+![Advertise Page](doc/advertise_page.png)
+
+## Admin Features
+
+* Admins can view transactions by clicking the "Transactions" button on user admin pages
+
+![Admin Transactions](doc/admin_transactions.png)
+
+![Admin Transaction Modal](doc/transaction_modal.jpg)
+
+* Users with transactions are displayed with a credit card icon:
+
+![User Icon](doc/user_txns_icon.png)
+
+
 
 ## Installation
 
