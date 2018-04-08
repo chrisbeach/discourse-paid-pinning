@@ -20,36 +20,40 @@ export default Ember.Component.extend({
 
         let self = this;
 
-        if (typeof StripeCheckout !== 'undefined') {
-            this.set('stripeHandler', StripeCheckout.configure({
-                key: self.get('settings').paid_pinning_plugin_public_key,
-                image: self.get('settings').paid_pinning_plugin_shop_image || self.get('settings').logo_small_url,
-                locale: 'auto',
-                billingAddress: self.get('settings').paid_pinning_plugin_billing_address,
-                zipCode: self.get('settings').paid_pinning_plugin_zip_code,
-                token: function(token) {
-                    self.set('transactionInProgress', true);
-                    console.log("Stripe callback");
-                    console.log(token);
-                    let params = {
-                        stripeToken: token.id,
-                        email: token.email,
-                        amount: self.get('amount'),
-                    };
-                    ajax('/checkout.json', { data: params, method: 'post' }).then(data => {
-                        console.log("Server reports successful payment. Balance: " + data.balance);
-                        self.set('result', self.get('result').concat(data.messages));
-                        Discourse.User.current().set("pp_txn_balance", data.balance);
-                        self.set('transactionInProgress', false);
-                    }).catch((e) => {
-                        self.set('transactionInProgress', false);
-                        alert(e);
-                    });
-                },
-                closed: function() {
-                    self.set('checkoutOpen', false);
-                }
-            }));
+        if (typeof StripeCheckout !== 'undefined' && Discourse.User.current()) {
+            // Need to do this in order to get the email. Not ideal for performance:
+            Discourse.User.findByUsername(Discourse.User.current().username).then((user) => {
+                this.set('stripeHandler', StripeCheckout.configure({
+                    key: self.get('settings').paid_pinning_plugin_public_key,
+                    image: self.get('settings').paid_pinning_plugin_shop_image || self.get('settings').logo_small_url,
+                    locale: 'auto',
+                    email: user.email,
+                    billingAddress: self.get('settings').paid_pinning_plugin_billing_address,
+                    zipCode: self.get('settings').paid_pinning_plugin_zip_code,
+                    token: function(token) {
+                        self.set('transactionInProgress', true);
+                        console.log("Stripe callback");
+                        console.log(token);
+                        let params = {
+                            stripeToken: token.id,
+                            email: token.email,
+                            amount: self.get('amount'),
+                        };
+                        ajax('/checkout.json', { data: params, method: 'post' }).then(data => {
+                            console.log("Server reports successful payment. Balance: " + data.balance);
+                            self.set('result', self.get('result').concat(data.messages));
+                            Discourse.User.current().set("pp_txn_balance", data.balance);
+                            self.set('transactionInProgress', false);
+                        }).catch((e) => {
+                            self.set('transactionInProgress', false);
+                            alert(e);
+                        });
+                    },
+                    closed: function() {
+                        self.set('checkoutOpen', false);
+                    }
+                }));
+            });
         } else {
             self.set('failure', "Stripe library not loaded");
         }
@@ -69,7 +73,7 @@ export default Ember.Component.extend({
         submitStripeCheckout() {
             let self = this;
             self.set('checkoutOpen', true);
-            this.get('stripeHandler').open({
+            self.get('stripeHandler').open({
                 name: self.get('settings').paid_pinning_plugin_shop_name,
                 description: self.get('settings').paid_pinning_plugin_description,
                 currency: self.get('settings').paid_pinning_plugin_currency,
