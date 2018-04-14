@@ -365,7 +365,7 @@ after_initialize do
   end
 
 
-  add_to_serializer(:basic_user, :pp_txn_balance) do
+  add_to_serializer(:basic_user, :pp_txn_balance, false) do
     if object.is_a?(Array) || object.is_a?(Hash)
       nil
     else
@@ -373,16 +373,36 @@ after_initialize do
     end
   end
 
-  add_to_serializer(:current_user, :pp_txn_balance) do
+  add_to_serializer(:basic_user, :pp_txn_count, false) do
+    if object.is_a?(Array) || object.is_a?(Hash)
+      nil
+    else
+      object.custom_fields && object.custom_fields[TXN_COUNT_FIELD].to_i
+    end
+  end
+
+  add_to_serializer(:current_user, :pp_txn_balance, false) do
     if object.is_a?(Array) || object.is_a?(Hash)
       nil
     else
       object.custom_fields && object.custom_fields[TXN_BALANCE_FIELD].to_i
+    end
+  end
+
+  add_to_serializer(:current_user, :pp_txn_count, false) do
+    if object.is_a?(Array) || object.is_a?(Hash)
+      nil
+    else
+      object.custom_fields && object.custom_fields[TXN_COUNT_FIELD].to_i
     end
   end
 
   add_to_serializer(:post, :pp_txn_balance, false) {
     object.user.custom_fields[TXN_BALANCE_FIELD].to_i
+  }
+
+  add_to_serializer(:post, :pp_txn_count, false) {
+    object.user.custom_fields[TXN_COUNT_FIELD].to_i
   }
 
   Txns::Engine.routes.draw do
