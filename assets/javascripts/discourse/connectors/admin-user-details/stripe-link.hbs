@@ -1,9 +1,9 @@
 {{#if model.stripe_customer_id}}
 
     <section class='details'>
-        <h1><i class="fa fa-cc-stripe"></i> Payment</h1>
+        <h1><i class="fa fa-cc-stripe"></i> {{i18n 'discourse_paid_pinning.payment'}}</h1>
         <div class='display-row'>
-            <div class='field'>Customer</div>
+            <div class='field'>{{i18n 'discourse_paid_pinning.customer'}}</div>
             <div class='value'>
                 <a href="https://dashboard.stripe.com/customers/{{unbound model.stripe_customer_id}}">
                     {{model.stripe_customer_id}}

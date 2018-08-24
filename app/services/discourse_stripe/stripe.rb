@@ -30,17 +30,18 @@ module DiscourseStripe
     end
 
     def customer(user, email, source)
-      if user && user.stripe_customer_id
+      if user.stripe_customer_id
         ::Stripe::Customer.retrieve(user.stripe_customer_id)
       else
         customer = ::Stripe::Customer.create(
             email: email,
-            source: source
+            source: source,
+            metadata: {
+                username: user.username
+            }
         )
-        if user
-          user.custom_fields['stripe_customer_id'] = customer.id
-          user.save_custom_fields(true)
-        end
+        user.custom_fields['stripe_customer_id'] = customer.id
+        user.save_custom_fields(true)
         customer
       end
     end
