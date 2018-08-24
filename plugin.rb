@@ -20,6 +20,7 @@ after_initialize do
 
   TXN_BALANCE_FIELD = 'pp_txn_balance'
   TXN_COUNT_FIELD = 'pp_txn_count'
+  STRIPE_CUSTOMER_ID_FIELD = 'stripe_customer_id'
 
   # FIXME do we need both?
   Topic.register_custom_field_type('is_pinned', :boolean)
@@ -220,6 +221,17 @@ after_initialize do
     end
 
 
+    class ::User
+      def stripe_customer_id
+        if custom_fields['stripe_customer_id']
+          custom_fields['stripe_customer_id']
+        else
+          nil
+        end
+      end
+    end
+
+
     class ::PpUserFieldsSerializer < ApplicationSerializer
       attributes(
           :txn_count,
@@ -351,6 +363,7 @@ after_initialize do
 
   whitelist_staff_user_custom_field(TXN_BALANCE_FIELD)
   whitelist_staff_user_custom_field(TXN_COUNT_FIELD)
+  whitelist_staff_user_custom_field(STRIPE_CUSTOMER_ID_FIELD)
 
   add_to_class(Guardian, :can_delete_txn?) do
     user.admin?
@@ -364,6 +377,9 @@ after_initialize do
     object.custom_fields && object.custom_fields[TXN_COUNT_FIELD].to_i
   end
 
+  add_to_serializer(:admin_detailed_user, :stripe_customer_id, false) do
+    object.custom_fields && object.custom_fields[STRIPE_CUSTOMER_ID_FIELD]
+  end
 
   add_to_serializer(:basic_user, :pp_txn_balance, false) do
     if object.is_a?(Array) || object.is_a?(Hash)

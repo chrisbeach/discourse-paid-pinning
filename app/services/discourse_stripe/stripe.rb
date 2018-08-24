@@ -8,31 +8,41 @@ module DiscourseStripe
       @currency = opts[:currency]
     end
 
-    def checkoutCharge(email, token, amount)
-      customer = ::Stripe::Customer.create(
-        :email => email,
-        :source  => token
-      )
+    def checkoutCharge(user = nil, email, token, amount)
+      customer = customer(user, email, token)
 
-      charge = ::Stripe::Charge.create(
+      @charge = ::Stripe::Charge.create(
         :customer => customer.id,
         :amount => amount,
         :description => @description,
         :currency => @currency
       )
-      charge
+      @charge
     end
 
-    def subscribe(email, opts)
-      customer = ::Stripe::Customer.create(
-        email: email,
-        source: opts[:stripeToken]
-      )
+    def subscribe(user = nil, email, opts)
+      customer = customer(user, email, opts[:stripeToken])
       @subscription = ::Stripe::Subscription.create(
         customer: customer.id,
         plan: opts[:plan]
       )
       @subscription
+    end
+
+    def customer(user, email, source)
+      if user && user.stripe_customer_id
+        ::Stripe::Customer.retrieve(user.stripe_customer_id)
+      else
+        customer = ::Stripe::Customer.create(
+            email: email,
+            source: source
+        )
+        if user
+          user.custom_fields['stripe_customer_id'] = customer.id
+          user.save_custom_fields(true)
+        end
+        customer
+      end
     end
 
     def successful?
