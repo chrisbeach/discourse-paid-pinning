@@ -12,7 +12,7 @@ export default {
         function enableStaffFeatures(api) {
             const store = container.lookup('store:main');
 
-            const UserController = container.lookupFactory('controller:user');
+            const UserController = container.factoryFor('controller:user');
             UserController.reopen({
                 txnCount: null,
 
