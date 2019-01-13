@@ -12,22 +12,25 @@ export default {
         function enableStaffFeatures(api) {
             const store = container.lookup('store:main');
 
-            const UserController = container.factoryFor('controller:user');
-            UserController.reopen({
-                txnCount: null,
-
-                _modelChanged: function() {
-                    this.set('txnCount', this.get('model.custom_fields.pp_txn_count') || 0);
-                    this.set('txnBalance', this.get('model.custom_fields.pp_txn_balance') || 0);
-                }.observes('model').on('init'),
-
-                actions: {
-                    showTxns() {
-                        const user = this.get('model');
-                        showTxns(store, user.get('id'), count => this.set('txnCount', count));
-                    }
-                }
-            });
+            // FIXME Ember 3 upgrade produced:
+            //       Uncaught TypeError: e.factoryFor(...).reopen is not a function
+            //
+            // const UserController = container.factoryFor('controller:user');
+            // UserController.reopen({
+            //     txnCount: null,
+            //
+            //     _modelChanged: function() {
+            //         this.set('txnCount', this.get('model.custom_fields.pp_txn_count') || 0);
+            //         this.set('txnBalance', this.get('model.custom_fields.pp_txn_balance') || 0);
+            //     }.observes('model').on('init'),
+            //
+            //     actions: {
+            //         showTxns() {
+            //             const user = this.get('model');
+            //             showTxns(store, user.get('id'), count => this.set('txnCount', count));
+            //         }
+            //     }
+            // });
 
             const mobileView = api.container.lookup('site:main').mobileView;
             const loc = mobileView ? 'before' : 'after';
