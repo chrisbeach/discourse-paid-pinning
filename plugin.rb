@@ -121,32 +121,32 @@ after_initialize do
 
       if user.blank?
         Rails.logger.error "discourse-paid-pinning: Expected user"
-        raise Discourse::InvalidParameters
+        raise Discourse::InvalidParameters.new(:user)
       end
 
       if amount.blank?
         Rails.logger.error "discourse-paid-pinning: Expected amount"
-        raise Discourse::InvalidParameters
+        raise Discourse::InvalidParameters.new(:amount)
       end
 
       if created_by.blank?
         Rails.logger.error "discourse-paid-pinning: Expected created_by"
-        raise Discourse::InvalidParameters
+        raise Discourse::InvalidParameters.new(:created_by)
       end
 
       if type.blank?
         Rails.logger.error "discourse-paid-pinning: Expected type"
-        raise Discourse::InvalidParameters
+        raise Discourse::InvalidParameters.new(:type)
       end
 
       unless amount.is_a? Integer
         Rails.logger.error "discourse-paid-pinning: Expected integer amount but got #{amount}"
-        raise Discourse::InvalidParameters
+        raise Discourse::InvalidParameters.new(:amount)
       end
 
       unless created_by.is_a? Integer
         Rails.logger.error "discourse-paid-pinning: Expected integer created_by but got #{created_by}"
-        raise Discourse::InvalidParameters
+        raise Discourse::InvalidParameters.new(:created_by)
       end
 
       txns = txns_for(user.id)
@@ -414,11 +414,11 @@ after_initialize do
   end
 
   add_to_serializer(:post, :pp_txn_balance, false) {
-    object.user.custom_fields[TXN_BALANCE_FIELD].to_i
+    object.user && object.user.custom_fields && object.user.custom_fields[TXN_BALANCE_FIELD].to_i
   }
 
   add_to_serializer(:post, :pp_txn_count, false) {
-    object.user.custom_fields[TXN_COUNT_FIELD].to_i
+    object.user && object.user.custom_fields && object.user.custom_fields[TXN_COUNT_FIELD].to_i
   }
 
   Txns::Engine.routes.draw do
