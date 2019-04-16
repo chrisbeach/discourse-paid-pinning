@@ -16,6 +16,10 @@ register_html_builder('server:before-head-close') do
   "<script src='https://checkout.stripe.com/checkout.js'></script>"
 end
 
+extend_content_security_policy(
+    script_src: ['https://checkout.stripe.com/checkout.js']
+)
+
 after_initialize do
 
   TXN_BALANCE_FIELD = 'pp_txn_balance'
