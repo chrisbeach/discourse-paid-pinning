@@ -90,6 +90,8 @@ after_initialize do
                          _user.id,
                          Txns.types[:pinned_topic],
                          topic_id = post.topic_id)
+          else
+            Rails.logger.warn "discourse-paid-pinning: No pin duration specified. Not pinning"
           end
         else
           Rails.logger.error "discourse-paid-pinning: Balance #{txn_balance} insufficient for fee #{SiteSetting.paid_pinning_plugin_fee}"

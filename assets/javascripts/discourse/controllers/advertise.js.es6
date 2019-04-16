@@ -16,7 +16,6 @@ export default Ember.Controller.extend({
     action: "createTopic",
 
     init() {
-        console.log("Initialising advertise controller");
         this._super();
         let self = this;
         const currentUser = Discourse.User.current();
@@ -44,8 +43,8 @@ export default Ember.Controller.extend({
             const messageBus = getRegister(this).lookup('message-bus:main');
             if (messageBus) {
                 messageBus.subscribe("/user/" +  currentUser.id + "/new_pp_txn", message => {
-                    console.log("Got new txn update: ");
-                    console.log(message);
+                    console.debug("Got new txn update: ");
+                    console.debug(message);
                     // Creating a new topic causes the client-side message bus to receive duplicate messages, so check we haven't received this txn before
                     if (message.txn && message.txn.pp_txn && !self.get("txns").find(t => t.id === message.txn.pp_txn.id)) {
                         // A horrible hack until we can get properly serialised json from server-side
@@ -54,8 +53,6 @@ export default Ember.Controller.extend({
                     }
                 });
                 messageBus.subscribe("/user/" +  currentUser.id + "/del_all_pp_txns", message => {
-                    console.log("Update from server: delete all pp txns");
-                    console.log(message);
                     self.set("txns", []);
                 });
             }

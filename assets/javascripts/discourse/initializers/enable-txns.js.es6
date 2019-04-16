@@ -60,24 +60,22 @@ export default {
 
 
         withPluginApi('0.8.7', api => {
-
             const messageBus = container.lookup('message-bus:main');
             if (messageBus) {
                 const channel = "/user/" +  currentUser.id + "/pp_fields";
                 messageBus.subscribe(channel, message => {
-                    console.log("Got paid_pinning user fields update: ");
-                    console.log(message);
+                    console.debug("Got paid_pinning user fields update: ");
+                    console.debug(message);
                     if (message.fields && message.fields.pp_user_fields) {
                         currentUser.set("pp_txn_balance", message.fields.pp_user_fields.txn_balance);
                         currentUser.set("pp_txn_count", message.fields.pp_user_fields.txn_count);
                     }
                 });
-                console.log("Subscribed to pp_fields updates on " + channel);
+                console.debug("Subscribed to pp_fields updates on " + channel);
             } else {
                 console.warn("No message bus found")
             }
             
-
             if (currentUser.staff) {
                 enableStaffFeatures(api)
             }

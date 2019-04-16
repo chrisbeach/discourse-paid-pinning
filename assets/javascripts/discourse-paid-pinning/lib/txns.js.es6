@@ -11,7 +11,6 @@ export function showTxns(store, userId) {
             });
             controller.reset();
             controller.set('userId', userId);
-            console.log("Showing txns for " + userId);
             return controller;
         });
     });
