@@ -1,0 +1,17 @@
+de:
+  site_settings:
+    paid_pinning_plugin_enabled: 'Plugin für bezahltes Pinnen aktiveren?'
+    paid_pinning_plugin_fee: 'Menge an Pennys/Cents (Ganze Zahl)'
+    paid_pinning_plugin_duration_hours: 'Zeit für die der Beitrag angepinnt wird (Stunden)'
+    paid_pinning_plugin_secret_key: 'Secret-Key von der Stripe API Konsole'
+    paid_pinning_plugin_public_key: 'Publishable-Key von der Stripe API Konsole'
+    paid_pinning_plugin_description: 'Beschreibung des gekauften Angebotes (erscheint bei der Bezahlung)'
+    paid_pinning_plugin_shop_name: 'Name deines Shops (erscheint bei der Bezahlung)'
+    paid_pinning_plugin_shop_image: 'Bild deines Shops (erscheint bei der Bezahlung). Das Favicon wird verwendet wenn nichts angegeben wird'
+    paid_pinning_plugin_currency: 'Währung (AUD, CAD, EUR, GBP, JPY, RUB oder USD)'
+    paid_pinning_plugin_zip_code: 'Soll die Postleitzahl bei der Bestellung abgefragt werden?'
+    paid_pinning_plugin_billing_address: 'Soll die Rechnungsadresse bei der Bestellung abgefragt werden?'
+    paid_pinning_plugin_grants_trust_level: 'Die Bezahlung erhöht das Vertrauenslevel'
+  discourse_paid_pinning:
+    payments:
+      success: 'Zahlung erhalten'
