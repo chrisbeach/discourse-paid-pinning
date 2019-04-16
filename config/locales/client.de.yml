@@ -1,0 +1,25 @@
+de:
+  js:
+    discourse_paid_pinning:
+      payment: "Bezahlung"
+      customer: "Kunde"
+      failed_stripe_load: "Das Bezahlungssystem konnte nicht geladen werden (Bist du Online?)"
+      missing_setting: "Fehlende Einstellung"
+      delete_confim: "Transaktion löschen?"
+      advertise_spiel: "## Werbung
+        Damit dein Betrag auf jeden Fall gesehen wird kannst du einen Betrag bezahlen und ihn so anpinnen."
+      nav_item: "Werben"
+      button_pay: "Bezahlen"
+      advertise_hamburger_option: "Werben"
+      txns:
+        none: "Transaktionen (keine)"
+        count: "Transaktionen ({{count}})"
+        title: "Transaktionen"
+        add: "Hinzufügen"
+        type:
+          card: "Karte"
+          pinned_topic: "Angepinnter Beitrag"
+          manual: "Manuell"
+      post:
+        create_pinned: "Angepinnten Beitrag erstellen"
+        pinned: "Gepinnt"
