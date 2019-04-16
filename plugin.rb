@@ -20,6 +20,8 @@ extend_content_security_policy(
     script_src: ['https://checkout.stripe.com/checkout.js']
 )
 
+register_svg_icon "credit-card" if respond_to?(:register_svg_icon)
+
 after_initialize do
 
   TXN_BALANCE_FIELD = 'pp_txn_balance'
