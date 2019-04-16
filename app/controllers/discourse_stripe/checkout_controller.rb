@@ -18,7 +18,7 @@ module DiscourseStripe
       payment = DiscourseStripe::Stripe.new(secret_key, stripe_options)
 
       begin
-        charge = payment.checkoutCharge(current_user,
+        charge = payment.checkout_charge(current_user,
                                         user_params[:stripeEmail],
                                         user_params[:stripeToken],
                                         user_params[:amount])

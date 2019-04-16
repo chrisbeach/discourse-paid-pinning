@@ -8,7 +8,7 @@ module DiscourseStripe
       @currency = opts[:currency]
     end
 
-    def checkoutCharge(user = nil, email, token, amount)
+    def checkout_charge(user = nil, email, token, amount)
       customer = customer(user, email, token)
 
       @charge = ::Stripe::Charge.create(
