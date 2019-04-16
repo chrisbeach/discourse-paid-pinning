@@ -1,5 +1,5 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
 import { showTxns } from 'discourse/plugins/discourse-paid-pinning/discourse-paid-pinning/lib/txns';
 
 export default {

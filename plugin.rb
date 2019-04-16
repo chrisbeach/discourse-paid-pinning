@@ -21,6 +21,8 @@ extend_content_security_policy(
 )
 
 register_svg_icon "credit-card" if respond_to?(:register_svg_icon)
+register_svg_icon "fa-cc-stripe" if respond_to?(:register_svg_icon)
+register_svg_icon "money" if respond_to?(:register_svg_icon)
 
 after_initialize do
 
