@@ -1,22 +1,11 @@
-{{#unless settings.paid_pinning_plugin_fee}}
-    <p class="warning">Missing setting: paid_pinning_plugin_fee</p>
-{{/unless}}
-
 {{#d-button action="submitStripeCheckout"
             class=classes
             icon="credit-card"
             disabled=disabledPayButton}}
     <span class="d-button-label">
-        Pay {{currency-amount amount=settings.paid_pinning_plugin_fee}} Fee
+        {{i18n "discourse_paid_pinning.button_pay"}} {{currency-amount amount=settings.paid_pinning_plugin_fee}}
     </span>
 {{/d-button}}
-
-{{#each result as |message|}}
-    <span class="payment-message">
-        <i class="fa fa-check"></i>
-        {{{message}}}
-    </span>
-{{/each}}
 
 {{#if transactionInProgress}}
     <span class="payment-message">
@@ -24,7 +13,30 @@
         Processing Payment
     </span>
 {{/if}}
+{{#each result as |message|}}
+    <span class="payment-message">
+        {{d-icon 'check'}}
+        {{{message}}}
+    </span>
+{{/each}}
 
 {{#if failure}}
-    <p class="warning">Sorry, but payment cannot be taken at present: {{{failure}}}</p>
+    <span class="warning">
+        {{d-icon 'warning'}}
+        {{{failure}}}
+    </span>
 {{/if}}
+
+{{#unless settings.paid_pinning_plugin_fee}}
+    <span class="warning">
+        {{d-icon 'warning'}}
+        {{i18n "discourse_paid_pinning.missing_setting"}}: paid_pinning_plugin_fee
+    </span>
+{{/unless}}
+{{#unless settings.paid_pinning_plugin_public_key}}
+    <span class="warning">
+        {{d-icon 'warning'}}
+        {{i18n "discourse_paid_pinning.missing_setting"}}: paid_pinning_plugin_public_key
+    </span>
+{{/unless}}
+

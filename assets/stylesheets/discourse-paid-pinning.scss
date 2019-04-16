@@ -11,8 +11,15 @@ button.btn-payment {
         margin-right: 2px;
         vertical-align: middle;
     }
-
     color: #6B6;
+}
+
+.warning {
+    display: inline-block;
+    color: $danger;
+}
+
+.payment-message, .warning {
     padding: 7px 12px;
     margin-left: 10px;
 }

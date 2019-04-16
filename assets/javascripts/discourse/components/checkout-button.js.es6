@@ -21,7 +21,7 @@ export default Ember.Component.extend({
         let self = this;
 
         if (typeof StripeCheckout === 'undefined') {
-            self.set('failure', "Stripe payment library failed to load (are you online?)");
+            self.set('failure', I18n.t('discourse_paid_pinning.failed_stripe_load'));
         } else if (currentUser) {
             // Need to do this in order to get the email. Not ideal for performance:
             Discourse.User.findByUsername(currentUser.username).then((user) => {
@@ -34,15 +34,15 @@ export default Ember.Component.extend({
                     zipCode: self.get('settings').paid_pinning_plugin_zip_code,
                     token: function (token) {
                       self.set('transactionInProgress', true);
-                      console.log("Stripe callback");
-                      console.log(token);
+                      console.debug("Stripe callback");
+                      console.debug(token);
                       let params = {
                         stripeToken: token.id,
                         email: token.email,
                         amount: self.get('amount'),
                       };
                       ajax('/checkout.json', {data: params, method: 'post'}).then(data => {
-                        console.log("Server reports successful payment.");
+                        console.debug("Server reports successful payment.");
                         self.set('result', data.messages);
                         self.set('transactionInProgress', false);
                       }).catch((e) => {

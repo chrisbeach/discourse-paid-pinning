@@ -14,7 +14,7 @@ export default {
             api.decorateWidget("hamburger-menu:footerLinks", () => {
                 return self.hamburger_footer;
             });
-            self.hamburger_footer.push({ href: "/advertise", rawLabel: "Advertise" });
+            self.hamburger_footer.push({ href: "/advertise", rawLabel: I18n.t('discourse_paid_pinning.advertise_hamburger_option') });
         });
     }
 };

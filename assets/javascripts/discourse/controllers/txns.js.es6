@@ -36,8 +36,7 @@ export default Ember.Controller.extend({
                             I18n.t("yes_value"), result => {
                 if (result) {
                     txn.destroyRecord().then(() => {
-                        const txns = this.get('model');
-                        txn.removeObject(txn);
+                        this.get('model').removeObject(txn);
                     }).catch(popupAjaxError);
                 }
             });
