@@ -380,22 +380,22 @@ after_initialize do
   end
 
   add_to_serializer(:admin_detailed_user, :pp_txn_balance, false) do
-    object.custom_fields && object.custom_fields[TXN_BALANCE_FIELD].to_i
+    object.class.method_defined?(:custom_fields) && object.custom_fields[TXN_BALANCE_FIELD].to_i
   end
 
   add_to_serializer(:admin_detailed_user, :pp_txn_count, false) do
-    object.custom_fields && object.custom_fields[TXN_COUNT_FIELD].to_i
+    object.class.method_defined?(:custom_fields) && object.custom_fields[TXN_COUNT_FIELD].to_i
   end
 
   add_to_serializer(:admin_detailed_user, :stripe_customer_id, false) do
-    object.custom_fields && object.custom_fields[STRIPE_CUSTOMER_ID_FIELD]
+    object.class.method_defined?(:custom_fields) && object.custom_fields[STRIPE_CUSTOMER_ID_FIELD]
   end
 
   add_to_serializer(:basic_user, :pp_txn_balance, false) do
     if object.is_a?(Array) || object.is_a?(Hash)
       nil
     else
-      object.custom_fields && object.custom_fields[TXN_BALANCE_FIELD].to_i
+      object.class.method_defined?(:custom_fields) && object.custom_fields[TXN_BALANCE_FIELD].to_i
     end
   end
 
@@ -403,7 +403,7 @@ after_initialize do
     if object.is_a?(Array) || object.is_a?(Hash)
       nil
     else
-      object.custom_fields && object.custom_fields[TXN_COUNT_FIELD].to_i
+      object.class.method_defined?(:custom_fields) && object.custom_fields[TXN_COUNT_FIELD].to_i
     end
   end
 
@@ -411,7 +411,7 @@ after_initialize do
     if object.is_a?(Array) || object.is_a?(Hash)
       nil
     else
-      object.custom_fields && object.custom_fields[TXN_BALANCE_FIELD].to_i
+      object.class.method_defined?(:custom_fields) && object.custom_fields[TXN_BALANCE_FIELD].to_i
     end
   end
 
@@ -419,7 +419,7 @@ after_initialize do
     if object.is_a?(Array) || object.is_a?(Hash)
       nil
     else
-      object.custom_fields && object.custom_fields[TXN_COUNT_FIELD].to_i
+      object.class.method_defined?(:custom_fields) && object.custom_fields[TXN_COUNT_FIELD].to_i
     end
   end
 
