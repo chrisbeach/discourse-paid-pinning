@@ -32,6 +32,7 @@ install:
   - git clone $TRAVIS_BUILD_DIR plugins/discourse-paid-pinning --depth 50 --branch $TRAVIS_BRANCH
 
 before_script:
+  - gem update --system
   - gem install bundler
   - bundle install
   - bundle exec rake db:create db:migrate
