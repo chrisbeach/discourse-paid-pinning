@@ -31,6 +31,7 @@ module DiscourseStripe
 
     def customer(user, email, source)
       if user.stripe_customer_id
+        ::Stripe::Customer.update(user.stripe_customer_id, source: source)
         ::Stripe::Customer.retrieve(user.stripe_customer_id)
       else
         customer = ::Stripe::Customer.create(
