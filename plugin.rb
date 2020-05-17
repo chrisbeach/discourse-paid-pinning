@@ -371,9 +371,9 @@ after_initialize do
   end
 
 
-  whitelist_staff_user_custom_field(TXN_BALANCE_FIELD)
-  whitelist_staff_user_custom_field(TXN_COUNT_FIELD)
-  whitelist_staff_user_custom_field(STRIPE_CUSTOMER_ID_FIELD)
+  DiscoursePluginRegistry.register_staff_user_custom_field(TXN_BALANCE_FIELD, self)
+  DiscoursePluginRegistry.register_staff_user_custom_field(TXN_COUNT_FIELD, self)
+  DiscoursePluginRegistry.register_staff_user_custom_field(STRIPE_CUSTOMER_ID_FIELD, self)
 
   add_to_class(Guardian, :can_delete_txn?) do
     user.admin?
