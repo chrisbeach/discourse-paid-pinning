@@ -4,7 +4,7 @@
 # authors: Chris Beach
 # url: https://github.com/chrisbeach/discourse-paid-pinning.git
 
-gem 'stripe', '5.0.0'
+gem 'stripe', '5.29.0'
 
 load File.expand_path('../lib/discourse_paid_pinning/engine.rb', __FILE__)
 
