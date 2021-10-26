@@ -65,7 +65,7 @@ export default Ember.Component.extend({
 
     @computed('currentUser.pp_txn_balance')
     classes(balance) {
-        return "btn btn-payment " + (balance && balance > 0 ? 'btn-default' : 'btn-primary');
+        return "btn btn-pp-payment " + (balance && balance > 0 ? 'btn-default' : 'btn-primary');
     },
 
     actions: {
